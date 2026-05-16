@@ -20,4 +20,4 @@ pg = flattened_lc.to_periodogram(method = 'bls' , period = p , frequency_factor 
 fold_lc = flattened_lc.fold(period = pg.period_at_max_power , epoch_time = pg.transit_time_at_max_power)
 
 # binning 
-bin_lc = fold_lc(time_bin_size = 0.01)
+bin_lc = fold_lc.bin(time_bin_size = 0.01)
