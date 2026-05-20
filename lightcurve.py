@@ -2,6 +2,9 @@
 import numpy as np 
 import matplotlib.pyplot as plt
 from lightkurve import search_targetpixelfile
+from scipy.optimize import curve_fit
+import batman
+
 
 # Getting the target pixel file for a star in 
 tpf = search_targetpixelfile('KIC 6922244', author = 'kepler' , quarter = 4, cadence = 'long').download()
@@ -10,10 +13,10 @@ tpf = search_targetpixelfile('KIC 6922244', author = 'kepler' , quarter = 4, cad
 lc = tpf.to_lightcurve(aperture_mask = tpf.pipeline_mask)
 
 # Flattening the lightcurve
-flattened_lc = lc.flatten(windows_length = 401)
+flattened_lc = lc.flatten(window_length = 401)
 
 # getting the period
-p = np.linspace(1,20,1000)
+p = np.linspace(1,20,10000)
 pg = flattened_lc.to_periodogram(method = 'bls' , period = p , frequency_factor = 500)
 
 # folding 
@@ -21,3 +24,36 @@ fold_lc = flattened_lc.fold(period = pg.period_at_max_power , epoch_time = pg.tr
 
 # binning 
 bin_lc = fold_lc.bin(time_bin_size = 0.01)
+x = bin_lc.phase.value
+
+# model by batman
+def model(x):
+    x_min = min(x)
+    x_max = max(x)
+    n = len(x)
+
+    params = batman.TransitParams()       #object to store transit parameters
+    params.t0 = 0.                        #time of inferior conjunction
+    params.per = 1                       #orbital period
+    params.rp = 0.1                      #planet radius (in units of stellar radii)
+    params.a = 15.                        #semi-major axis (in units of stellar radii)
+    params.inc = 87.                    #orbital inclination (in degrees)
+    params.ecc = 0.                       #eccentricity
+    params.w = 90.                        #longitude of periastron (in degrees)
+    params.limb_dark = "nonlinear"        #limb darkening model
+    params.u = [0.5, 0.1, 0.1, -0.1]      #limb darkening coefficients [u1, u2, u3, u4]
+
+    t = np.linspace(x_min,x_max,n)  #times at which to calculate light curve
+    m = batman.TransitModel(params, t)    #initializes model
+
+    flux = m.light_curve(params)
+
+    return t,flux
+
+time,flux = model(x)
+
+plt.plot(time,flux)
+plt.plot(bin_lc.phase.value,bin_lc.flux.value)
+plt.show()
+
+
