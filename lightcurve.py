@@ -34,9 +34,9 @@ def model(x):
 
     params = batman.TransitParams()       #object to store transit parameters
     params.t0 = 0.                        #time of inferior conjunction
-    params.per = 1                       #orbital period
-    params.rp = 0.1                      #planet radius (in units of stellar radii)
-    params.a = 15.                        #semi-major axis (in units of stellar radii)
+    params.per = 3.522                       #orbital period
+    params.rp = 0.0899                      #planet radius (in units of stellar radii)
+    params.a = 10.                        #semi-major axis (in units of stellar radii)
     params.inc = 87.                    #orbital inclination (in degrees)
     params.ecc = 0.                       #eccentricity
     params.w = 90.                        #longitude of periastron (in degrees)
@@ -52,8 +52,9 @@ def model(x):
 
 time,flux = model(x)
 
+
 plt.plot(time,flux)
-plt.plot(bin_lc.phase.value,bin_lc.flux.value)
+plt.plot(bin_lc.phase.value,bin_lc.flux.value, c = 'r')
 plt.show()
 
 
