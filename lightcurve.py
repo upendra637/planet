@@ -2,7 +2,6 @@
 import numpy as np 
 import matplotlib.pyplot as plt
 from lightkurve import search_targetpixelfile
-from scipy.optimize import curve_fit
 import batman
 
 
@@ -33,15 +32,15 @@ def model(x):
     n = len(x)
 
     params = batman.TransitParams()       #object to store transit parameters
-    params.t0 = 0.                        #time of inferior conjunction
-    params.per = 3.522                       #orbital period
-    params.rp = 0.0899                      #planet radius (in units of stellar radii)
-    params.a = 10.                        #semi-major axis (in units of stellar radii)
-    params.inc = 87.                    #orbital inclination (in degrees)
+    params.t0 = -0.00403554483570368      #time of inferior conjunction
+    params.per = 3.522                    #orbital period
+    params.rp = 0.14650606006179753       #planet radius (in units of stellar radii)
+    params.a = 3.6383024955202954         #semi-major axis (in units of stellar radii)
+    params.inc = 74.07318993651366        #orbital inclination (in degrees)
     params.ecc = 0.                       #eccentricity
     params.w = 90.                        #longitude of periastron (in degrees)
-    params.limb_dark = "nonlinear"        #limb darkening model
-    params.u = [0.5, 0.1, 0.1, -0.1]      #limb darkening coefficients [u1, u2, u3, u4]
+    params.limb_dark = "quadratic"        #limb darkening model
+    params.u = [0.1,0.3]                  #limb darkening coefficients [u1, u2, u3, u4]
 
     t = np.linspace(x_min,x_max,n)  #times at which to calculate light curve
     m = batman.TransitModel(params, t)    #initializes model
