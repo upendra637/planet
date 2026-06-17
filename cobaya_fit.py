@@ -1,11 +1,12 @@
 import batman
 import numpy as np
-import lightkurve as lk
+from bin import flat_data
 import matplotlib.pyplot as plt
 
-flux = np.ones(15)
-flux_err = -0.2 + 0.1*np.random.rand(15)
-time = np.arange(0,1,15)
+flc = flat_data()
+flux = flc.flux.value
+time = flc.time.value
+flux_err = flc.flux_err.value
 
 
 def transit_model(theta):
@@ -101,7 +102,7 @@ info = {
     "sampler": {
         "mcmc": {
             "Rminus1_stop": 0.01,
-            "max_tries": 100000
+            "max_tries": 10000
         }
     }
 }
