@@ -77,12 +77,12 @@ print(
     b_t0
 )
 
-# plotting
-# plt.scatter(phase,flux, label = 'real light curve ', s = 3)
-# plt.plot(phase,best_model , label = 'model', c = 'r')
-# plt.xlabel('phase')
-# plt.ylabel('flux')
-# plt.legend()
-# plt.show()
+plotting
+plt.scatter(phase,flux, label = 'real light curve ', s = 3)
+plt.plot(phase,best_model , label = 'model', c = 'r')
+plt.xlabel('phase')
+plt.ylabel('flux')
+plt.legend()
+plt.show()
 
 
