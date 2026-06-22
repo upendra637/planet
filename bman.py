@@ -1,5 +1,7 @@
 # importing libraries
 import numpy as np 
+import matplotlib
+matplotlib.use('TkAgg')
 import matplotlib.pyplot as plt
 from lightkurve import search_targetpixelfile
 from scipy.optimize import curve_fit
@@ -77,7 +79,7 @@ print(
     b_t0
 )
 
-plotting
+# plotting
 plt.scatter(phase,flux, label = 'real light curve ', s = 3)
 plt.plot(phase,best_model , label = 'model', c = 'r')
 plt.xlabel('phase')

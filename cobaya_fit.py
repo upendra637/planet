@@ -1,7 +1,10 @@
 import batman
 import numpy as np
+import matplotlib
+matplotlib.use('TkAgg')
 from bin import flat_data
 import matplotlib.pyplot as plt
+from cobaya.run import run
 
 flc = flat_data()
 flux = flc.flux.value
@@ -43,114 +46,117 @@ def loglike(t0, per, rp, a, inc):
 
     return -0.5 * chi2
 
-from cobaya.run import run
 
-info = {
+try:
 
-    "likelihood": {
-        "transit": {
-            "external": loglike,
-            "input_params": [
-                "t0",
-                "per",
-                "rp",
-                "a",
-                "inc"
-            ]
-            
-        }
-    },
+    info = {
 
-    "params": {
-
-        "t0": {
-            "prior": {
-                "min": 2459000.1,
-                "max": 2459000.3
+        "likelihood": {
+            "transit": {
+                "external": loglike,
+                "input_params": [
+                    "t0",
+                    "per",
+                    "rp",
+                    "a",
+                    "inc"
+                ]
+                
             }
         },
 
-        "per": {
-            "prior": {
-                "min": 3.45,
-                "max": 3.55
+        "params": {
+
+            "t0": {
+                "prior": {
+                    "min": 2459000.1,
+                    "max": 2459000.3
+                }
+            },
+
+            "per": {
+                "prior": {
+                    "min": 3.45,
+                    "max": 3.55
+                }
+            },
+
+            "rp": {
+                "prior": {
+                    "min": 0.01,
+                    "max": 0.20
+                }
+            },
+
+            "a": {
+                "prior": {
+                    "min": 5,
+                    "max": 30
+                }
+            },
+
+            "inc": {
+                "prior": {
+                    "min": 80,
+                    "max": 90
+                }
             }
         },
 
-        "rp": {
-            "prior": {
-                "min": 0.01,
-                "max": 0.20
+        "sampler": {
+            "mcmc": {
+                "Rminus1_stop": 0.01,
+                "max_tries": 10000
             }
-        },
-
-        "a": {
-            "prior": {
-                "min": 5,
-                "max": 30
-            }
-        },
-
-        "inc": {
-            "prior": {
-                "min": 80,
-                "max": 90
-            }
-        }
-    },
-
-    "sampler": {
-        "mcmc": {
-            "Rminus1_stop": 0.01,
-            "max_tries": 10000
         }
     }
-}
 
-updated_info, sampler = run(info)
+    updated_info, sampler = run(info)
 
-samples = sampler.products()["sample"]
+    samples = sampler.products()["sample"]
 
-print(samples.head())
+    print(samples.head())
 
-best = samples.mean()
+    best = samples.mean()
 
-print(best)
+    print(best)
 
-best_t0  = best["t0"]
-best_per = best["per"]
-best_rp  = best["rp"]
-best_a   = best["a"]
-best_inc = best["inc"]
+    best_t0  = best["t0"]
+    best_per = best["per"]
+    best_rp  = best["rp"]
+    best_a   = best["a"]
+    best_inc = best["inc"]
 
-best_model = transit_model(
-    [best_t0,
-     best_per,
-     best_rp,
-     best_a,
-     best_inc]
-)
+    best_model = transit_model(
+        [best_t0,
+        best_per,
+        best_rp,
+        best_a,
+        best_inc]
+    )
 
-import matplotlib.pyplot as plt
+    import matplotlib.pyplot as plt
 
-plt.figure(figsize=(8,5))
+    plt.figure(figsize=(8,5))
 
-plt.scatter(
-    time,
-    flux,
-    s=5,
-    color="black",
-    label="Data"
-)
+    plt.scatter(
+        time,
+        flux,
+        s=5,
+        color="black",
+        label="Data"
+    )
 
-plt.plot(
-    time,
-    best_model,
-    color="red",
-    lw=2,
-    label="BATMAN fit"
-)
+    plt.plot(
+        time,
+        best_model,
+        color="red",
+        lw=2,
+        label="BATMAN fit"
+    )
 
-plt.legend()
-plt.show()
+    plt.legend()
+    plt.show()
 
+except Exception as e:
+    print("An error occurred:", e)
