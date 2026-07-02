@@ -5,13 +5,14 @@ matplotlib.use('TkAgg')
 import matplotlib.pyplot as plt
 from scipy.optimize import curve_fit
 import batman
-import bin
+from bin import flatNbin
 
 
-flattened_lc = bin.flat_data('KIC 6922244', 'kepler', 'long', 4, 401)
+binn = flatNbin('KIC 6922244', 'kepler', 'long', 4)
+flattened_lc = binn.flat_data(401)
 
 # binning 
-bin_lc = bin.bin_data(1, 100, 10000, 0.01)
+bin_lc = binn.bin_data(1, 100, 10000, 0.01)
 phase = bin_lc.phase.value
 flux = bin_lc.flux.value
 

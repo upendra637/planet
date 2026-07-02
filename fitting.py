@@ -2,10 +2,11 @@ import numpy as np
 import matplotlib
 matplotlib.use('TkAgg')
 import matplotlib.pyplot as plt 
-from bin import flat_data
+from bin import flatNbin
 import batman
 
-flc = flat_data()
+binn = flatNbin('KIC 6922244', 'kepler', 'long', 4)
+flc = binn.flat_data(401)
 flux = flc.flux.value
 time = flc.time.value
 
