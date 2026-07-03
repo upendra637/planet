@@ -7,14 +7,18 @@ import batman
 
 binn = flatNbin('KIC 6922244', 'kepler', 'long', 4)
 flc = binn.flat_data(401)
+pg = binn.bls_method(1, 100, 10000)
+
+period = pg.period_at_max_power.value
+transit_time= pg.transit_time_at_max_power.value
 flux = flc.flux.value
 time = flc.time.value
 
 def mod(time):
 
     params = batman.TransitParams()       #object to store transit parameters
-    params.t0 = 0.00403554483570368      #time of inferior conjunction
-    params.per = 3.522                    #orbital period
+    params.t0 = transit_time              #time of inferior conjunction
+    params.per = period                   #orbital period
     params.rp = 0.14650606006179753       #planet radius (in units of stellar radii)
     params.a = 3.6383024955202954         #semi-major axis (in units of stellar radii)
     params.inc = 74.07318993651366        #orbital inclination (in degrees)

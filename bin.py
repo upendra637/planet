@@ -18,11 +18,12 @@ class flatNbin:
 
     def flat_data(self, wind_len):
 
-        self.wind_len = wind_len
+        self.wind_len = wind_len # The window length for the flattening process, which determines the size of the moving window used to fit and remove trends from the light curve data. A larger window length will result in a smoother flattened light curve, while a smaller window length will preserve more of the original variability in the data.
 
 
         flc = self.lc.flatten(window_length = self.wind_len)
         return flc
+    
     
 
     def bls_method(self, min_period, max_period, N):
@@ -66,8 +67,7 @@ class flatNbin:
 
         pg = self.bls_method(self.min_period, self.max_period, self.N)
 
-        folc = flc.fold(period = pg.period_at_max_power, epoch_time = pg.transit_time_at_max_power)
-
+        folc = flc.fold(period = pg.period_at_max_power,  epoch_time = pg.transit_time_at_max_power)
         blc = folc.bin(time_bin_size = self.bin_size)
 
         return blc

@@ -8,6 +8,10 @@ from cobaya.run import run
 
 binn = flatNbin('KIC 6922244', 'kepler', 'long', 4)
 flc = binn.flat_data(401)
+pg = binn.bls_method(1, 100, 10000)
+
+period = pg.period_at_max_power.value
+transit_time= pg.transit_time_at_max_power.value
 flux = flc.flux.value
 time = flc.time.value
 flux_err = flc.flux_err.value
@@ -161,3 +165,13 @@ try:
 
 except Exception as e:
     print("An error occurred:", e)
+    
+print(
+    loglike(
+        transit_time,   # replace with actual t0
+        period,
+        0.1,
+        10,
+        87
+    )
+)
