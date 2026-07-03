@@ -8,13 +8,16 @@ import batman
 from bin import flatNbin
 
 
-binn = flatNbin('KIC 6922244', 'kepler', 'long', 4)
-flattened_lc = binn.flat_data(401)
+binn = flatNbin('KIC 6922244', 'kepler', 'long', 5)
 
-# binning 
-bin_lc = binn.bin_data(1, 100, 10000, 0.01)
+flattened_lc = binn.flat_data(401)
+pg = binn.bls_method(1, 100, 10000)
+
+bin_lc = binn.bin_data(0.01)
 phase = bin_lc.phase.value
 flux = bin_lc.flux.value
+period = pg.period_at_max_power.value
+
 
 
 # model by batman
@@ -28,7 +31,7 @@ def model(phase, rp, a, inc,t0):
     params.rp = rp                        #planet radius (in units of stellar radii)
     params.inc = inc                      #orbital inclination (in degrees)
     params.t0 = t0                        #time of inferior conjunction
-    params.per = 3.522                    #orbital period
+    params.per = period                   #orbital period
     params.ecc = 0.                       #eccentricity
     params.w = 90.                        #longitude of periastron (in degrees)
     params.limb_dark = "quadratic"        #limb darkening model
