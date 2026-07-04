@@ -10,8 +10,8 @@ binn = flatNbin('KIC 6922244', 'kepler', 'long', 4)
 flc = binn.flat_data(401)
 pg = binn.bls_method(1, 100, 10000)
 
-period = pg.period_at_max_power.value
-transit_time= pg.transit_time_at_max_power.value
+period = float(pg.period_at_max_power.value)
+transit_time= float(pg.transit_time_at_max_power.value)
 flux = flc.flux.value
 time = flc.time.value
 flux_err = flc.flux_err.value
@@ -50,7 +50,7 @@ def loglike(t0, per, rp, a, inc):
     )
 
     return -0.5 * chi2
-
+    
 
 try:
 
@@ -74,43 +74,48 @@ try:
 
             "t0": {
                 "prior": {
-                    "min": 352.00,
-                    "max": 443.00
-                }
+                    "min": 352.0000,
+                    "max": 443.0000
+                },
+                "ref": transit_time
             },
 
             "per": {
                 "prior": {
-                    "min": 3.45,
-                    "max": 3.55
-                }
+                    "min": 3.4500,
+                    "max": 3.5500
+                },
+                "ref": period
             },
 
             "rp": {
                 "prior": {
-                    "min": 0.01,
-                    "max": 0.20
-                }
+                    "min": 0.0100,
+                    "max": 0.2000 
+                },
+                "ref": 0.14
             },
 
             "a": {
                 "prior": {
-                    "min": 5,
-                    "max": 30
-                }
+                    "min": 1.0000,
+                    "max": 8.0000
+                },
+                "ref": 3.633
             },
 
             "inc": {
                 "prior": {
-                    "min": 80,
-                    "max": 90
-                }
+                    "min": 70.0000,
+                    "max": 90.0000
+                },
+                "ref": 74.0
             }
         },
 
         "sampler": {
             "mcmc": {
-                "Rminus1_stop": 0.01,
+                "Rminus1_stop": 0.001,
                 "max_tries": 10000
             }
         }
@@ -166,12 +171,4 @@ try:
 except Exception as e:
     print("An error occurred:", e)
     
-print(
-    loglike(
-        transit_time,   # replace with actual t0
-        period,
-        0.1,
-        10,
-        87
-    )
-)
+

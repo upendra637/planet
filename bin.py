@@ -11,8 +11,7 @@ class flatNbin:
         self.cadence = cadence  # The cadence of the light curve data (e.g., 'long', 'short', etc.)
         self.quarter = quarter  # The quarter of the light curve data to be analyzed
 
-        self.lc = lk.search_lightcurve(self.star , author = self.author , cadence = self.cadence , quarter = self.quarter).download()
-
+        self.lc = lk.search_lightcurve(self.star , author = self.author , cadence = self.cadence , quarter = self.quarter).download(quality_bitmask="default").remove_nans()  # this line searches for and downloads the light curve data for the specified star, author, cadence, and quarter using the lightkurve library. The quality_bitmask parameter is set to "default", which means that only good quality data points will be included in the downloaded light curve. The resulting light curve object is stored in the self.lc attribute of the flatNbin class instance.
 
 
 
