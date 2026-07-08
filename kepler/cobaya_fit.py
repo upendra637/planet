@@ -49,7 +49,8 @@ def loglike(t0, per, rp, a, inc):
         ((flux - model)/flux_err)**2
     )
 
-    return -0.5 * chi2
+    return float(-0.5 * chi2)
+
     
 
 try:
@@ -75,9 +76,10 @@ try:
             "t0": {
                 "prior": {
                     "min": 352.0000,
-                    "max": 443.0000
+                    "max": 360.0000
                 },
-                "ref": transit_time
+                "ref": float(transit_time),
+                "proposal": 0.0002
             },
 
             "per": {
@@ -85,7 +87,8 @@ try:
                     "min": 3.4500,
                     "max": 3.5500
                 },
-                "ref": period
+                "ref": float(period),
+                "proposal": 1e-4
             },
 
             "rp": {
@@ -93,7 +96,8 @@ try:
                     "min": 0.0100,
                     "max": 0.2000 
                 },
-                "ref": 0.14
+                "ref": 0.1,
+                "proposal": 0.005
             },
 
             "a": {
@@ -101,7 +105,8 @@ try:
                     "min": 1.0000,
                     "max": 8.0000
                 },
-                "ref": 3.633
+                "ref": 3.0,
+                "proposal": 0.02
             },
 
             "inc": {
@@ -109,7 +114,8 @@ try:
                     "min": 70.0000,
                     "max": 90.0000
                 },
-                "ref": 74.0
+                "ref": 74.0,
+                "proposal": 0.1
             }
         },
 
@@ -125,17 +131,17 @@ try:
 
     samples = sampler.products()["sample"]
 
-    print(samples.head())
+    print(type(samples))
 
     best = samples.mean()
 
     print(best)
 
-    best_t0  = best["t0"]
-    best_per = best["per"]
-    best_rp  = best["rp"]
-    best_a   = best["a"]
-    best_inc = best["inc"]
+    best_t0  = best[0]
+    best_per = best[1]
+    best_rp  = best[2]
+    best_a   = best[3]
+    best_inc = best[4]
 
     best_model = transit_model(
         [best_t0,
@@ -145,7 +151,7 @@ try:
         best_inc]
     )
 
-    import matplotlib.pyplot as plt
+
 
     plt.figure(figsize=(8,5))
 
