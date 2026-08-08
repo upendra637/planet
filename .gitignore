@@ -1,3 +1,6 @@
 alderaan/
 alderaan/
 alderaan/
+
+__pycache__/
+*.py[cod]
